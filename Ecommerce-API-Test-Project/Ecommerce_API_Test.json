@@ -1,0 +1,760 @@
+{
+  "info": {
+    "_postman_id": "9b2ee572-2b15-4f5d-9b41-f91305b22167",
+    "name": "Ecommerce_API_Test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "38306267"
+  },
+  "item": [
+    {
+      "name": "01_用户模块",
+      "item": [
+        {
+          "name": "获取用户列表",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"状态码为200\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/users",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "获取单个用户-存在",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"状态码为200\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/users/1",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "users",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "获取单个用户-不存在",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"状态码为404\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([404]);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/users/999",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "users",
+                "999"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "获取单个用户-ID为0",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"状态码为404\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([404]);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/users/0",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "users",
+                "0"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "获取单个用户-ID为负数",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"状态码为404\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([404]);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/users/-1",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "users",
+                "-1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02_登录认证",
+      "item": [
+        {
+          "name": "登录成功-获取Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"状态码为200\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+                  "});\r",
+                  "// 登录成功后，自动提取token到环境变量\r",
+                  "var jsonData = pm.response.json();\r",
+                  "if (jsonData.token) {\r",
+                  "    pm.environment.set(\"token\", jsonData.token);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"admin\",\"password\":\"123456\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/login",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "登录失败-密码错误",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"状态码为401\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([401]);\r",
+                  "});\r",
+                  "// 登录成功后，自动提取token到环境变量\r",
+                  "var jsonData = pm.response.json();\r",
+                  "if (jsonData.token) {\r",
+                  "    pm.environment.set(\"token\", jsonData.token);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"admin\",\"password\":\"12345678\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/login",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "登录失败-账号为空",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"状态码为401/400\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([404, 401]);\r",
+                  "});\r",
+                  "// 登录成功后，自动提取token到环境变量\r",
+                  "var jsonData = pm.response.json();\r",
+                  "if (jsonData.token) {\r",
+                  "    pm.environment.set(\"token\", jsonData.token);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"\",\"password\":\"12345678\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/login",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "登录失败-密码为空",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"状态码为401/400\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([404, 401]);\r",
+                  "});\r",
+                  "// 登录成功后，自动提取token到环境变量\r",
+                  "var jsonData = pm.response.json();\r",
+                  "if (jsonData.token) {\r",
+                  "    pm.environment.set(\"token\", jsonData.token);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"admin\",\"password\":\"\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/login",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "03_商品模块",
+      "item": [
+        {
+          "name": "获取商品列表",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"状态码为200\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer fake_token_1",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{BaseUrl}}/products",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "04_订单模块",
+      "item": [
+        {
+          "name": "无Token访问订单列表",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"状态码为401\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([401]);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/orders",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "错误Token访问订单",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"状态码为401\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([401]);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "abcd",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BaseUrl}}/orders",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "正确Token访问订单列表",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"状态码为200\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BaseUrl}}/orders",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "创建订单成功",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"状态码为201\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([201]);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"product_id\":1,\r\n    \"amount\":2,\r\n    \"status\":\"created\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/orders",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "创建订单-缺少product_id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"状态码为400\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"amount\":2,\r\n    \"status\":\"created\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/orders",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "创建订单-amount为0",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"状态码为400\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"product_id\":1,\r\n    \"amount\":0,\r\n    \"status\":\"created\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/orders",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "创建订单-amount为负数",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"状态码为400\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"product_id\":1,\r\n    \"amount\":-2,\r\n    \"status\":\"created\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/orders",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "创建订单-amount为小数",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"状态码为400\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"product_id\":1,\r\n    \"amount\":0.2,\r\n    \"status\":\"created\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/orders",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
