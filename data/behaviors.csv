@@ -1,6 +1,6 @@
 "BROKEN","EPIC","FAILED","FEATURE","PASSED","SKIPPED","STORY","UNKNOWN"
+"0","","0","shop_test-PageObject版","1","0","正确Token访问订单列表","0"
 "0","","0","shop_test-PageObject版","1","0","访问产品内容","0"
+"0","","0","shop_test-PageObject版","1","0","创建订单成功","0"
 "0","","0","shop_test-PageObject版","1","0","获取不存在的用户","0"
 "0","","0","shop_test-PageObject版","1","0","获取用户列表","0"
-"0","","0","shop_test-PageObject版","1","0","正确Token访问订单列表","0"
-"0","","0","shop_test-PageObject版","1","0","创建订单成功","0"
