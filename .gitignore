@@ -10,7 +10,7 @@ wheels/
 .venv
 
 # allure
-allure-results/
+# allure-results/
 node_modules/
 reports/
 allure*/
