@@ -1,0 +1,6 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","2","test_get_orders_no_auth","Web_Automation","2026-05-04","passed","2026-05-04","TestWithClient","test_shop_po","",""
+"","2","test_get_user_not_found","Web_Automation","2026-05-04","passed","2026-05-04","TestWithClient","test_shop_po","",""
+"","7","test_get_users_list","Web_Automation","2026-05-04","passed","2026-05-04","TestWithClient","test_shop_po","",""
+"","2","test_get_orders","Web_Automation","2026-05-04","passed","2026-05-04","TestWithClient","test_shop_po","",""
+"","2","test_create_order","Web_Automation","2026-05-04","passed","2026-05-04","TestWithClient","test_shop_po","",""
