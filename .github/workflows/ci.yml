@@ -38,7 +38,7 @@ jobs:
       # Step 5: 后台启动Flask后端，并等待就绪
       - name: Start Flask backend
         run: |
-          python app.py &
+          uv run app.py &
           sleep 3
           echo "检查后端是否启动..."
           curl -s http://127.0.0.1:5000/api/users || exit 1
