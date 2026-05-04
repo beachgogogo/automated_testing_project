@@ -7,6 +7,17 @@ on:
   pull_request:
     branches: [main]
 
+# 设置 Pages 的部署权限
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 确保同时只运行一个部署任务
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   # 定义一个Job叫 api-test
   api-test:
@@ -46,20 +57,48 @@ jobs:
 
       # Step 6: 运行Pytest + Allure
       - name: Run tests
-        run: uv run pytest Web_Automation/test_shop_po.py -v --alluredir=./allure-results
+        # run: uv run pytest Web_Automation/test_shop_po.py -v --alluredir=./allure-results
+        run: uv run pytest Web_Automation/test_shop_po.py -v
 
-      # Step 7: 安装Allure命令行（用npm装最快）
-      - name: Install Allure CLI
-        run: npm install -g allure-commandline
-
-      # Step 8: 生成HTML报告
-      - name: Generate Allure Report
-        run: allure generate ./allure-results -o ./allure-report --clean
-
-      # Step 9: 上传报告为Artifact（可下载查看）
-      - name: Upload Allure Report
-        uses: actions/upload-artifact@v4
+      # 加载历史报告数据，用于生成趋势图
+      - name: Load test report history
+        uses: actions/checkout@v4
+        if: always()
+        continue-on-error: true
         with:
-          name: allure-report
-          path: ./allure-report
-          retention-days: 30
+          ref: gh-pages
+          path: gh-pages
+
+      # 生成 Allure 报告
+      - name: Build test report
+        uses: simple-elf/allure-report-action@v1.7
+        if: always()
+        with:
+          gh_pages: gh-pages
+          allure_history: allure-history
+          allure_results: allure-results
+
+      # 发布报告到 GitHub Pages
+      - name: Publish test report
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
+
+      # # Step 7: 安装Allure命令行（用npm装最快）
+      # - name: Install Allure CLI
+      #   run: npm install -g allure-commandline
+
+      # # Step 8: 生成HTML报告
+      # - name: Generate Allure Report
+      #   run: allure generate ./allure-results -o ./allure-report --clean
+
+      # # Step 9: 上传报告为Artifact（可下载查看）
+      # - name: Upload Allure Report
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: allure-report
+      #     path: ./allure-report
+      #     retention-days: 30
