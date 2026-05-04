@@ -1,0 +1,65 @@
+name: API Automation CI
+
+# 什么时候触发：push到main分支，或PR到main分支
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # 定义一个Job叫 api-test
+  api-test:
+    # 在Ubuntu虚拟机上跑（免费）
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: 拉取代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: 安装Python
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      # Step 3: 安装uv（你用的包管理器）
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      # Step 4: 安装项目依赖
+      - name: Install dependencies
+        run: uv sync
+
+      # Step 5: 后台启动Flask后端，并等待就绪
+      - name: Start Flask backend
+        run: |
+          python app.py &
+          sleep 3
+          echo "检查后端是否启动..."
+          curl -s http://127.0.0.1:5000/api/users || exit 1
+          echo "后端就绪！"
+
+      # Step 6: 运行Pytest + Allure
+      - name: Run tests
+        run: uv run pytest Web_Automation/test_shop_po.py -v --alluredir=./allure-results
+
+      # Step 7: 安装Allure命令行（用npm装最快）
+      - name: Install Allure CLI
+        run: npm install -g allure-commandline
+
+      # Step 8: 生成HTML报告
+      - name: Generate Allure Report
+        run: allure generate ./allure-results -o ./allure-report --clean
+
+      # Step 9: 上传报告为Artifact（可下载查看）
+      - name: Upload Allure Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: ./allure-report
+          retention-days: 30
