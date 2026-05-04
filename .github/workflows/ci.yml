@@ -9,7 +9,7 @@ on:
 
 # 设置 Pages 的部署权限
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
