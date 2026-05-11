@@ -5,13 +5,15 @@ from shop_api_client import APIClient
 
 @pytest.fixture
 def client():
-    c = APIClient("http://127.0.0.1:5000")
+#    c = APIClient("http://127.0.0.1:5000")
+    c = APIClient()
     c.login("admin", "123456")  # 前置登录
     return c
 
 @pytest.fixture
 def visitor():
-    v = APIClient("http://127.0.0.1:5000")
+#    v = APIClient("http://127.0.0.1:5000")
+    v = APIClient()
     return v
 
 @allure.feature("shop_test-PageObject版")
