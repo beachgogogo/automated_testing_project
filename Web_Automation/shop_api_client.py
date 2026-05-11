@@ -1,9 +1,12 @@
 # shop_api_client.py - HTTP请求的"PageObject"
 import requests
+import os
+
+BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:5000")
 
 class APIClient:
-    def __init__(self, base_url):
-        self.base_url = base_url
+    def __init__(self, base_url=None):
+        self.base_url = base_url or BASE_URL
         self.token = None
     
     def login(self, username, password):

@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # 1. 后端服务
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flask-api
+    ports:
+      - "5000:5000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/users"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - test-net
+
+  # 2. 测试服务
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: api-test-runner
+    depends_on:
+      api:
+        condition: service_healthy  # 等后端健康再启动
+    networks:
+      - test-net
+    volumes:
+      - ./allure-results:/app/allure-results  # 报告映射到本地
+
+networks:
+  test-net:
+    driver: bridge

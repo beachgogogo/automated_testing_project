@@ -1,0 +1,25 @@
+# 基础镜像：轻量级Python 3.13
+FROM python:3.13-slim
+
+WORKDIR /app
+
+# 装uv
+RUN pip install uv
+
+# 复制依赖定义
+COPY pyproject.toml uv.lock ./
+
+# 安装依赖
+RUN uv sync
+
+# 复制测试代码和数据
+COPY api_client.py ./
+COPY test_shop_po.py ./
+COPY conftest.py ./
+COPY test_data/ ./test_data/
+
+# 设置环境变量：测试容器通过docker网络访问后端
+ENV BASE_URL=http://api:5000
+
+# 容器启动时自动跑测试
+CMD ["uv", "run", "pytest", "test_shop_po.py", "-v", "--alluredir=./allure-results"]
