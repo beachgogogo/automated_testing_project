@@ -15,7 +15,6 @@ RUN uv sync
 # 复制测试代码和数据
 COPY api_client.py ./
 COPY test_shop_po.py ./
-COPY conftest.py ./
 COPY test_data/ ./test_data/
 
 # 设置环境变量：测试容器通过docker网络访问后端
